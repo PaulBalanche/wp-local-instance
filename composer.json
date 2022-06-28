@@ -1,7 +1,7 @@
 {
     "name": "wpextend/wp-local-instance",
     "description": "",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "type": "project",
     "license": "proprietary",
     "authors": [
@@ -20,7 +20,7 @@
             "composer create-project roots/bedrock",
             "composer require wpextend/wpextend --working-dir=bedrock",
             "rm composer.json && rm composer.lock && rm -r vendor",
-            "mv bedrock/* ./ && mv bedrock/.* ./",
+            "mv bedrock/* . && mv bedrock/.* . 2>/dev/null",
             "rm bedrock"
         ]
     }
