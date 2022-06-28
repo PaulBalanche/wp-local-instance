@@ -5,4 +5,5 @@ rm -r vendor
 mv bedrock/* .
 mv bedrock/.env .env
 mv bedrock/.gitignore .gitignore
-rm bedrock
+rm -r bedrock
+rm post-create-project-cmd.sh
