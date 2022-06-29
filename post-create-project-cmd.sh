@@ -1,5 +1,4 @@
 #!/bin/bash
-
 slugify () {
     echo "$1" | iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
 }
@@ -39,6 +38,15 @@ DB_HOST=${DB_HOST:-mariadb}
 
 read -p 'Database table prefix [wp_]: ' DB_PREFIX
 DB_PREFIX=${DB_PREFIX:-wp_}
+
+read -p 'Wordpress admin user [admin]: ' WP_ADMIN_USER
+WP_ADMIN_USER=${WP_ADMIN_USER:-admin}
+
+read -sp 'Wordpress admin password [pass]: ' WP_ADMIN_PASSWORD
+WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-pass}
+
+read -p 'Wordpress admin email [paul.balanche@gmail.com]: ' WP_ADMIN_EMAIL
+WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-paul.balanche@gmail.com}
 
 echo "DB_NAME='$DB_NAME'
 DB_USER='$DB_USER'

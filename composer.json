@@ -1,7 +1,7 @@
 {
     "name": "wpextend/wp-local-instance",
     "description": "",
-    "version": "0.0.53",
+    "version": "0.0.54",
     "type": "project",
     "license": "proprietary",
     "authors": [
@@ -21,7 +21,10 @@
             "composer require wpextend/wp-advanced-block-theme --working-dir=bedrock",
             "composer require wpextend/wp-starter-theme --working-dir=bedrock",
             "bash post-create-project-cmd.sh",
-            "cd docker && make"
+            "cd docker && make",
+            "echo \"Waiting DB starting...\"",
+            "sleep 10",
+            "make wp-install"
         ]
     }
 }
