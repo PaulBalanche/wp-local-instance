@@ -1,4 +1,9 @@
 #!/bin/bash
+
+slugify () {
+    echo "$1" | iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
+}
+
 rm composer.json
 rm composer.lock
 rm -r vendor
@@ -7,7 +12,8 @@ mv bedrock/.gitignore .gitignore
 rm -r bedrock
 
 read -p 'Project name [wp-local-instance]:' PROJECT_NAME
-PROJECT_NAME=${PROJECT_NAME:-wp-local-instance}
+PROJECT_NAME=slugify ${PROJECT_NAME:-wp-local-instance}
+PROJECT_NAME=$(slugify "$PROJECT_NAME")
 
 read -p 'WP_HOME (without protocol, without port) [wplocal-instance.local.buzzbrothers.ch]: ' WP_HOME
 WP_HOME=${WP_HOME:-wplocal-instance.local.buzzbrothers.ch}
@@ -175,3 +181,5 @@ WEBGRIND_TAG=1-1.28.5
 XHPROF_TAG=3.6.3" > docker/.env
 
 rm post-create-project-cmd.sh
+
+mv ../wp-local-instance ../$PROJECT_NAME
