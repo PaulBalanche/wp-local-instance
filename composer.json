@@ -20,7 +20,8 @@
             "composer create-project roots/bedrock",
             "composer require wpextend/wp-advanced-block-theme --working-dir=bedrock",
             "composer require wpextend/wp-starter-theme --working-dir=bedrock",
-            "bash post-create-project-cmd.sh"
+            "bash post-create-project-cmd.sh",
+            "cd docker && make"
         ]
     }
 }
