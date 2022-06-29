@@ -12,11 +12,11 @@ mv bedrock/.gitignore .gitignore
 rm -r bedrock
 
 read -p 'Project name [wp-local-instance]:' PROJECT_NAME
-PROJECT_NAME=slugify ${PROJECT_NAME:-wp-local-instance}
+PROJECT_NAME=${PROJECT_NAME:-wp-local-instance}
 PROJECT_NAME=$(slugify "$PROJECT_NAME")
 
-read -p 'WP_HOME (without protocol, without port) [wplocal-instance.local.buzzbrothers.ch]: ' WP_HOME
-WP_HOME=${WP_HOME:-wplocal-instance.local.buzzbrothers.ch}
+read -p 'WP_HOME (without protocol, without port) ['$PROJECT_NAME'.local.buzzbrothers.ch]: ' WP_HOME
+WP_HOME=${WP_HOME:-$PROJECT_NAME.local.buzzbrothers.ch}
 
 read -p 'HTTP protocol [http]: ' HTTP_PROTOCOL
 HTTP_PROTOCOL=${HTTP_PROTOCOL:-http}
