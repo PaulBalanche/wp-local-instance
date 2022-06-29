@@ -193,5 +193,5 @@ RSYSLOG_TAG=latest
 WEBGRIND_TAG=1-1.28.5
 XHPROF_TAG=3.6.3" > docker/.env
 
-rm post-create-project-cmd.sh
 mv ../wp-local-instance ../$PROJECT_NAME
+rm post-create-project-cmd.sh
