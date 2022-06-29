@@ -6,16 +6,33 @@ mv bedrock/* .
 mv bedrock/.gitignore .gitignore
 rm -r bedrock
 
-#!/bin/bash
-read -p 'DB_NAME:' DB_NAME
-read -p 'DB_USER: ' DB_USER
-read -sp 'DB_PASSWORD: ' DB_PASSWORD
+read -p 'Project name [wp-local-instance]:' PROJECT_NAME
+PROJECT_NAME=${PROJECT_NAME:-WP local instance}
+
+read -p 'HTTP protocol [http]: ' HTTP_PROTOCOL
+HTTP_PROTOCOL=${HTTP_PROTOCOL:-http}
+
+read -p 'WP_HOME (without protocol) [wplocal-instance.local.buzzbrothers.ch]: ' WP_HOME
+WP_HOME=${WP_HOME:-wplocal-instance.local.buzzbrothers.ch}
+
+read -p 'PUBLIC_PORT [8000]: ' PUBLIC_PORT
+PUBLIC_PORT=${PUBLIC_PORT:-8000}
+
+read -p 'Database name [wordpress]:' DB_NAME
+DB_NAME=${DB_NAME:-wordpress}
+
+read -p 'Database user [wordpress]: ' DB_USER
+DB_USER=${DB_USER:-wordpress}
+
+read -sp 'Database password [wordpress]: ' DB_PASSWORD
+DB_PASSWORD=${DB_PASSWORD:-wordpress}
 echo "";
-read -p 'DB_HOST: ' DB_HOST
-read -p 'DB_PREFIX: ' DB_PREFIX
-read -p 'HTTP_PROTOCOL: ' HTTP_PROTOCOL
-read -p 'WP_HOME (without protocol): ' WP_HOME
-read -p 'PUBLIC_PORT: ' PUBLIC_PORT
+
+read -p 'Database host [mariadb]: ' DB_HOST
+DB_HOST=${DB_HOST:-mariadb}
+
+read -p 'Database table prefix [wp_]: ' DB_PREFIX
+DB_PREFIX=${DB_PREFIX:-wp_}
 
 echo "DB_NAME='$DB_NAME'
 DB_USER='$DB_USER'
@@ -52,8 +69,8 @@ echo "### Documentation available at https://wodby.com/docs/stacks/wordpress/loc
 
 ### PROJECT SETTINGS
 
-PROJECT_NAME=my_wordpress_project
-PROJECT_BASE_URL=wp.docker.localhost
+PROJECT_NAME=$PROJECT_NAME
+PROJECT_BASE_URL=$WP_HOME
 PROJECT_HTTP_PROTOCOL=$HTTP_PROTOCOL
 PROJET_PUBLIC_PORT=$PUBLIC_PORT
 
