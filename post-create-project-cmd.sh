@@ -195,5 +195,5 @@ XHPROF_TAG=3.6.3" > docker/.env
 
 cd docker && make wp-install
 
-rm post-create-project-cmd.sh
+cd .. && rm post-create-project-cmd.sh
 mv ../wp-local-instance ../$PROJECT_NAME
