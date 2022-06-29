@@ -7,13 +7,13 @@ mv bedrock/.gitignore .gitignore
 rm -r bedrock
 
 read -p 'Project name [wp-local-instance]:' PROJECT_NAME
-PROJECT_NAME=${PROJECT_NAME:-WP local instance}
+PROJECT_NAME=${PROJECT_NAME:-wp-local-instance}
+
+read -p 'WP_HOME (without protocol, without port) [wplocal-instance.local.buzzbrothers.ch]: ' WP_HOME
+WP_HOME=${WP_HOME:-wplocal-instance.local.buzzbrothers.ch}
 
 read -p 'HTTP protocol [http]: ' HTTP_PROTOCOL
 HTTP_PROTOCOL=${HTTP_PROTOCOL:-http}
-
-read -p 'WP_HOME (without protocol) [wplocal-instance.local.buzzbrothers.ch]: ' WP_HOME
-WP_HOME=${WP_HOME:-wplocal-instance.local.buzzbrothers.ch}
 
 read -p 'PUBLIC_PORT [8000]: ' PUBLIC_PORT
 PUBLIC_PORT=${PUBLIC_PORT:-8000}
@@ -47,7 +47,7 @@ DB_HOST='$DB_HOST'
 DB_PREFIX='$DB_PREFIX'
 
 WP_ENV='development'
-WP_HOME='$HTTP_PROTOCOL://$WP_HOME'
+WP_HOME='$HTTP_PROTOCOL://$WP_HOME:$PUBLIC_PORT'
 WP_SITEURL=\"\${WP_HOME}/wp\"
 
 # Specify optional debug.log path
