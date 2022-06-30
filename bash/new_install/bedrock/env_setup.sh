@@ -1,16 +1,17 @@
 #!/bin/bash
 PROJECT_NAME=$(basename "$PWD")
 
+SITE_TITLE=$(get_config SITE_TITLE "Site title" "$PROJECT_NAME")
 WP_HOME=$(get_config WP_HOME "WP_HOME (without protocol, without port)" "$PROJECT_NAME.local.buzzbrothers.ch")
 HTTP_PROTOCOL=$(get_config HTTP_PROTOCOL "HTTP protocol" "http")
 PUBLIC_PORT=$(get_config PUBLIC_PORT "PUBLIC_PORT" "8000")
 DB_NAME=$(get_config DB_NAME "Database name" "wordpress")
 DB_USER=$(get_config DB_USER "Database user" "wordpress")
-DB_PASSWORD=$(get_config DB_PASSWORD "Database password" "wordpress")
+DB_PASSWORD=$(get_secret DB_PASSWORD "Database password" "wordpress")
 DB_HOST=$(get_config DB_HOST "Database host" "mariadb")
 DB_PREFIX=$(get_config DB_PREFIX "Database table prefix" "wp_")
 WP_ADMIN_USER=$(get_config WP_ADMIN_USER "Wordpress admin user" "admin")
-WP_ADMIN_PASSWORD=$(get_config WP_ADMIN_PASSWORD "Wordpress admin password" "pass")
+WP_ADMIN_PASSWORD=$(get_secret WP_ADMIN_PASSWORD "Wordpress admin password" "pass")
 WP_ADMIN_EMAIL=$(get_config WP_ADMIN_EMAIL "Wordpress admin email" "paul.balanche@gmail.com")
 
 echo "DB_NAME='$DB_NAME'
@@ -49,6 +50,7 @@ echo "### Documentation available at https://wodby.com/docs/stacks/wordpress/loc
 ### PROJECT SETTINGS
 
 PROJECT_NAME=$PROJECT_NAME
+SITE_TITLE=$SITE_TITLE
 PROJECT_BASE_URL=$WP_HOME
 PROJECT_HTTP_PROTOCOL=$HTTP_PROTOCOL
 PROJET_PUBLIC_PORT=$PUBLIC_PORT

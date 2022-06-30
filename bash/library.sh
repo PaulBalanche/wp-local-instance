@@ -9,3 +9,11 @@ get_config () {
 
     echo $VALUE
 }
+
+get_secret () {
+
+	read -p "$2 [$3]: " VALUE
+    VALUE=${VALUE:-$3}
+
+    echo $VALUE
+}

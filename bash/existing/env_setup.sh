@@ -1,37 +1,17 @@
 #!/bin/bash
 PROJECT_NAME=$(basename "$PWD")
 
-read -p 'WP_HOME (without protocol, without port) ['$PROJECT_NAME'.local.buzzbrothers.ch]: ' WP_HOME
-WP_HOME=${WP_HOME:-$PROJECT_NAME.local.buzzbrothers.ch}
+WP_HOME=$(get_config WP_HOME "WP_HOME (without protocol, without port)" "$PROJECT_NAME.local.buzzbrothers.ch")
+HTTP_PROTOCOL=$(get_config HTTP_PROTOCOL "HTTP protocol" "http")
+PUBLIC_PORT=$(get_config PUBLIC_PORT "PUBLIC_PORT" "8000")
+DB_NAME=$(get_config DB_NAME "Database name" "wordpress")
+DB_USER=$(get_config DB_USER "Database user" "wordpress")
+DB_PASSWORD=$(get_secret DB_PASSWORD "Database password" "wordpress")
+DB_HOST=$(get_config DB_HOST "Database host" "mariadb")
+DB_PREFIX=$(get_config DB_PREFIX "Database table prefix" "wp_")
 
-read -p 'HTTP protocol [http]: ' HTTP_PROTOCOL
-HTTP_PROTOCOL=${HTTP_PROTOCOL:-http}
-
-read -p 'PUBLIC_PORT [8000]: ' PUBLIC_PORT
-PUBLIC_PORT=${PUBLIC_PORT:-8000}
-
-read -p 'Wordpress files location (leave empty if root): ' SERVER_DOCUMENT_ROOT
+SERVER_DOCUMENT_ROOT=$(get_config SERVER_DOCUMENT_ROOT "Wordpress files location (leave empty if root)" "")
 if [ -z "$SERVER_DOCUMENT_ROOT" ]; then SERVER_DOCUMENT_ROOT=""; else SERVER_DOCUMENT_ROOT="/"$SERVER_DOCUMENT_ROOT; fi
-
-read -p 'Database name [wordpress]:' DB_NAME
-DB_NAME=${DB_NAME:-wordpress}
-
-read -p 'Database user [wordpress]: ' DB_USER
-DB_USER=${DB_USER:-wordpress}
-
-read -sp 'Database password [wordpress]: ' DB_PASSWORD
-DB_PASSWORD=${DB_PASSWORD:-wordpress}
-echo "";
-
-read -p 'Database host [mariadb]: ' DB_HOST
-DB_HOST=${DB_HOST:-mariadb}
-
-read -p 'Database table prefix [wp_]: ' DB_PREFIX
-DB_PREFIX=${DB_PREFIX:-wp_}
-
-WP_ADMIN_USER='imported...'
-WP_ADMIN_PASSWORD='imported...'
-WP_ADMIN_EMAIL='imported...'
 
 echo "### Documentation available at https://wodby.com/docs/stacks/wordpress/local
 ### Changelog can be found at https://github.com/wodby/docker4wordpress/releases
@@ -52,10 +32,6 @@ DB_PASSWORD=$DB_PASSWORD
 DB_ROOT_PASSWORD=$DB_PASSWORD
 DB_HOST=$DB_HOST
 DB_CHARSET=utf8
-
-WP_ADMIN_USER=$WP_ADMIN_USER
-WP_ADMIN_PASSWORD=$WP_ADMIN_PASSWORD
-WP_ADMIN_EMAIL=$WP_ADMIN_EMAIL
 
 # You can generate these using the https://roots.io/salts.html Roots.io secret-key service
 # Supported by vanilla WP image only, see docker-compose.override.yml
