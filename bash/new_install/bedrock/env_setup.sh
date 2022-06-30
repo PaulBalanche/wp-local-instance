@@ -26,30 +26,15 @@ DB_HOST=${DB_HOST:-mariadb}
 read -p 'Database table prefix [wp_]: ' DB_PREFIX
 DB_PREFIX=${DB_PREFIX:-wp_}
 
-read -p "Do you want to install Wordpress database from scratch? (y/n) " yn
+read -p 'Wordpress admin user [admin]: ' WP_ADMIN_USER
+WP_ADMIN_USER=${WP_ADMIN_USER:-admin}
 
-case $yn in 
-	[yY] )
-        read -p 'Wordpress admin user [admin]: ' WP_ADMIN_USER
-        WP_ADMIN_USER=${WP_ADMIN_USER:-admin}
+read -sp 'Wordpress admin password [pass]: ' WP_ADMIN_PASSWORD
+WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-pass}
+echo "";
 
-        read -sp 'Wordpress admin password [pass]: ' WP_ADMIN_PASSWORD
-        WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-pass}
-        echo "";
-
-        read -p 'Wordpress admin email [paul.balanche@gmail.com]: ' WP_ADMIN_EMAIL
-        WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-paul.balanche@gmail.com}
-
-        WP_INSTALL_DB=true;;
-	[nN] )
-        WP_ADMIN_USER='imported...'
-        WP_ADMIN_PASSWORD='imported...'
-        WP_ADMIN_EMAIL='imported...'
-
-        WP_INSTALL_DB=false;;
-	* ) echo invalid response;
-		exit 1;;
-esac
+read -p 'Wordpress admin email [paul.balanche@gmail.com]: ' WP_ADMIN_EMAIL
+WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-paul.balanche@gmail.com}
 
 echo "DB_NAME='$DB_NAME'
 DB_USER='$DB_USER'
@@ -198,11 +183,7 @@ WEBGRIND_TAG=1-1.28.5
 XHPROF_TAG=3.6.3" > docker/.env
 
 cd docker
-make wp-first-start && make wp-install-dependencies
-
-if $WP_INSTALL_DB
-then
-    make wp-core-install
-fi
-
+make wp-first-start
+make wp-install-dependencies
+make wp-core-install
 cd ..
