@@ -10,6 +10,9 @@ HTTP_PROTOCOL=${HTTP_PROTOCOL:-http}
 read -p 'PUBLIC_PORT [8000]: ' PUBLIC_PORT
 PUBLIC_PORT=${PUBLIC_PORT:-8000}
 
+read -p 'Wordpress files location (leave empty if root): ' SERVER_DOCUMENT_ROOT
+if [ -z "$SERVER_DOCUMENT_ROOT" ]; then SERVER_DOCUMENT_ROOT=""; else SERVER_DOCUMENT_ROOT="/"$SERVER_DOCUMENT_ROOT; fi
+
 read -p 'Database name [wordpress]:' DB_NAME
 DB_NAME=${DB_NAME:-wordpress}
 
@@ -26,59 +29,9 @@ DB_HOST=${DB_HOST:-mariadb}
 read -p 'Database table prefix [wp_]: ' DB_PREFIX
 DB_PREFIX=${DB_PREFIX:-wp_}
 
-read -p "Do you want to install Wordpress database from scratch? (y/n) " yn
-
-case $yn in 
-	[yY] )
-        read -p 'Wordpress admin user [admin]: ' WP_ADMIN_USER
-        WP_ADMIN_USER=${WP_ADMIN_USER:-admin}
-
-        read -sp 'Wordpress admin password [pass]: ' WP_ADMIN_PASSWORD
-        WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-pass}
-        echo "";
-
-        read -p 'Wordpress admin email [paul.balanche@gmail.com]: ' WP_ADMIN_EMAIL
-        WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-paul.balanche@gmail.com}
-
-        WP_INSTALL_DB=true;;
-	[nN] )
-        WP_ADMIN_USER='imported...'
-        WP_ADMIN_PASSWORD='imported...'
-        WP_ADMIN_EMAIL='imported...'
-
-        WP_INSTALL_DB=false;;
-	* ) echo invalid response;
-		exit 1;;
-esac
-
-echo "DB_NAME='$DB_NAME'
-DB_USER='$DB_USER'
-DB_PASSWORD='$DB_PASSWORD'
-
-# Optionally, you can use a data source name (DSN)
-# When using a DSN, you can remove the DB_NAME, DB_USER, DB_PASSWORD, and DB_HOST variables
-# DATABASE_URL='mysql://database_user:database_password@database_host:database_port/database_name'
-
-# Optional database variables
-DB_HOST='$DB_HOST'
-DB_PREFIX='$DB_PREFIX'
-
-WP_ENV='development'
-WP_HOME='$HTTP_PROTOCOL://$WP_HOME:$PUBLIC_PORT'
-WP_SITEURL=\"\${WP_HOME}/wp\"
-
-# Specify optional debug.log path
-# WP_DEBUG_LOG='/path/to/debug.log'
-
-# Generate your keys here: https://roots.io/salts.html
-AUTH_KEY='generateme'
-SECURE_AUTH_KEY='generateme'
-LOGGED_IN_KEY='generateme'
-NONCE_KEY='generateme'
-AUTH_SALT='generateme'
-SECURE_AUTH_SALT='generateme'
-LOGGED_IN_SALT='generateme'
-NONCE_SALT='generateme'" > .env
+WP_ADMIN_USER='imported...'
+WP_ADMIN_PASSWORD='imported...'
+WP_ADMIN_EMAIL='imported...'
 
 echo "### Documentation available at https://wodby.com/docs/stacks/wordpress/local
 ### Changelog can be found at https://github.com/wodby/docker4wordpress/releases
@@ -91,7 +44,7 @@ PROJECT_BASE_URL=$WP_HOME
 PROJECT_HTTP_PROTOCOL=$HTTP_PROTOCOL
 PROJET_PUBLIC_PORT=$PUBLIC_PORT
 
-SERVER_DOCUMENT_ROOT=/web
+SERVER_DOCUMENT_ROOT=$SERVER_DOCUMENT_ROOT
 
 DB_NAME=$DB_NAME
 DB_USER=$DB_USER
@@ -197,12 +150,9 @@ RSYSLOG_TAG=latest
 WEBGRIND_TAG=1-1.28.5
 XHPROF_TAG=3.6.3" > docker/.env
 
-cd docker
-make wp-first-start && make wp-install-dependencies
+mv db.sql docker/mariadb-init/db.sql
 
-if $WP_INSTALL_DB
-then
-    make wp-core-install
-fi
+cd docker
+make
 
 cd ..
