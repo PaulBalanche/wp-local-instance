@@ -1,40 +1,17 @@
 #!/bin/bash
 PROJECT_NAME=$(basename "$PWD")
 
-read -p 'WP_HOME (without protocol, without port) ['$PROJECT_NAME'.local.buzzbrothers.ch]: ' WP_HOME
-WP_HOME=${WP_HOME:-$PROJECT_NAME.local.buzzbrothers.ch}
-
-read -p 'HTTP protocol [http]: ' HTTP_PROTOCOL
-HTTP_PROTOCOL=${HTTP_PROTOCOL:-http}
-
-read -p 'PUBLIC_PORT [8000]: ' PUBLIC_PORT
-PUBLIC_PORT=${PUBLIC_PORT:-8000}
-
-read -p 'Database name [wordpress]:' DB_NAME
-DB_NAME=${DB_NAME:-wordpress}
-
-read -p 'Database user [wordpress]: ' DB_USER
-DB_USER=${DB_USER:-wordpress}
-
-read -sp 'Database password [wordpress]: ' DB_PASSWORD
-DB_PASSWORD=${DB_PASSWORD:-wordpress}
-echo "";
-
-read -p 'Database host [mariadb]: ' DB_HOST
-DB_HOST=${DB_HOST:-mariadb}
-
-read -p 'Database table prefix [wp_]: ' DB_PREFIX
-DB_PREFIX=${DB_PREFIX:-wp_}
-
-read -p 'Wordpress admin user [admin]: ' WP_ADMIN_USER
-WP_ADMIN_USER=${WP_ADMIN_USER:-admin}
-
-read -sp 'Wordpress admin password [pass]: ' WP_ADMIN_PASSWORD
-WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-pass}
-echo "";
-
-read -p 'Wordpress admin email [paul.balanche@gmail.com]: ' WP_ADMIN_EMAIL
-WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-paul.balanche@gmail.com}
+WP_HOME=$(get_config WP_HOME "WP_HOME (without protocol, without port)" "$PROJECT_NAME.local.buzzbrothers.ch")
+HTTP_PROTOCOL=$(get_config HTTP_PROTOCOL "HTTP protocol" "http")
+PUBLIC_PORT=$(get_config PUBLIC_PORT "PUBLIC_PORT" "8000")
+DB_NAME=$(get_config DB_NAME "Database name" "wordpress")
+DB_USER=$(get_config DB_USER "Database user" "wordpress")
+DB_PASSWORD=$(get_config DB_PASSWORD "Database password" "wordpress")
+DB_HOST=$(get_config DB_HOST "Database host" "mariadb")
+DB_PREFIX=$(get_config DB_PREFIX "Database table prefix" "wp_")
+WP_ADMIN_USER=$(get_config WP_ADMIN_USER "Wordpress admin user" "admin")
+WP_ADMIN_PASSWORD=$(get_config WP_ADMIN_PASSWORD "Wordpress admin password" "pass")
+WP_ADMIN_EMAIL=$(get_config WP_ADMIN_EMAIL "Wordpress admin email" "paul.balanche@gmail.com")
 
 echo "DB_NAME='$DB_NAME'
 DB_USER='$DB_USER'
