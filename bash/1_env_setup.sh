@@ -1,18 +1,5 @@
 #!/bin/bash
-slugify () {
-    echo "$1" | iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
-}
-
-rm composer.json
-rm composer.lock
-rm -r vendor
-mv bedrock/* .
-mv bedrock/.gitignore .gitignore
-rm -r bedrock
-
-read -p 'Project name [wp-local-instance]:' PROJECT_NAME
-PROJECT_NAME=${PROJECT_NAME:-wp-local-instance}
-PROJECT_NAME=$(slugify "$PROJECT_NAME")
+PROJECT_NAME=$(basename "$PWD")
 
 read -p 'WP_HOME (without protocol, without port) ['$PROJECT_NAME'.local.buzzbrothers.ch]: ' WP_HOME
 WP_HOME=${WP_HOME:-$PROJECT_NAME.local.buzzbrothers.ch}
@@ -39,15 +26,34 @@ DB_HOST=${DB_HOST:-mariadb}
 read -p 'Database table prefix [wp_]: ' DB_PREFIX
 DB_PREFIX=${DB_PREFIX:-wp_}
 
-read -p 'Wordpress admin user [admin]: ' WP_ADMIN_USER
-WP_ADMIN_USER=${WP_ADMIN_USER:-admin}
+read -p "Do you want to install Wordpress database from scratch? (y/n) " yn
 
-read -sp 'Wordpress admin password [pass]: ' WP_ADMIN_PASSWORD
-WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-pass}
-echo "";
+case $yn in 
+	[yY] )
+        read -p 'Wordpress admin user [admin]: ' WP_ADMIN_USER
+        WP_ADMIN_USER=${WP_ADMIN_USER:-admin}
 
-read -p 'Wordpress admin email [paul.balanche@gmail.com]: ' WP_ADMIN_EMAIL
-WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-paul.balanche@gmail.com}
+        read -sp 'Wordpress admin password [pass]: ' WP_ADMIN_PASSWORD
+        WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-pass}
+        echo "";
+
+        read -p 'Wordpress admin email [paul.balanche@gmail.com]: ' WP_ADMIN_EMAIL
+        WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-paul.balanche@gmail.com}
+
+        WP_INSTALL_DB = true
+
+        break;;
+	[nN] )
+        WP_ADMIN_USER='imported...'
+        WP_ADMIN_PASSWORD='imported...'
+        WP_ADMIN_EMAIL='imported...'
+
+        WP_INSTALL_DB = false
+
+        break;;
+	* ) echo invalid response;
+		exit 1;;
+esac
 
 echo "DB_NAME='$DB_NAME'
 DB_USER='$DB_USER'
@@ -193,5 +199,12 @@ RSYSLOG_TAG=latest
 WEBGRIND_TAG=1-1.28.5
 XHPROF_TAG=3.6.3" > docker/.env
 
-mv ../wp-local-instance ../$PROJECT_NAME
-rm post-create-project-cmd.sh
+cd docker
+make wp-first-start && make wp-install-dependencies
+
+if WP_INSTALL_DB
+then
+    make wp-core-install
+fi
+
+cd ..
