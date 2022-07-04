@@ -160,9 +160,3 @@ OPENSMTPD_TAG=6-1.14.0
 RSYSLOG_TAG=latest
 WEBGRIND_TAG=1-1.28.5
 XHPROF_TAG=3.6.3" > docker/.env
-
-cd docker
-make wp-first-start
-make wp-install-dependencies
-make wp-core-install
-cd ..

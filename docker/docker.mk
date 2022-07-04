@@ -60,12 +60,15 @@ wp-first-start:
 	docker-compose pull
 	docker-compose up -d --remove-orphans
 
-wp-install-dependencies:
-	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)_$(or $(filter-out $@,$(MAKECMDGOALS)), 'php')' --format "{{ .ID }}") bash bash/make/dependencies.sh
+composer-install:
+	docker exec $(shell docker ps --filter name='^/$(PROJECT_NAME)_php' --format "{{ .ID }}") composer install
 
 wp-core-install:
 	docker exec $(shell docker ps --filter name='^/$(PROJECT_NAME)_php' --format "{{ .ID }}") bash bash/make/wp_core_install.sh $(PROJECT_HTTP_PROTOCOL)://$(PROJECT_BASE_URL):$(PROJET_PUBLIC_PORT) "$(SITE_TITLE)" $(WP_ADMIN_USER) $(WP_ADMIN_PASSWORD) $(WP_ADMIN_EMAIL)
 	@echo "\n--------------- 🎉 CONGRATS! ---------------\n\nYour website should now be up and running at:\n\n👉 $(PROJECT_HTTP_PROTOCOL)://$(PROJECT_BASE_URL):$(PROJET_PUBLIC_PORT)\n\n---------------------------------------------\n"
+
+mysql-dump-remote:
+	docker exec $(shell docker ps --filter name='^/$(PROJECT_NAME)_php' --format "{{ .ID }}") mysqldump --host=$(REMOTE_DB_HOST) --user=$(REMOTE_DB_USER) --password=$(REMOTE_DB_PASSWORD) $(REMOTE_DB_NAME) --result-file=docker/mariadb-init/dump.sql
 
 ## logs	:	View containers logs.
 ##		You can optinally pass an argument with the service name to limit logs
