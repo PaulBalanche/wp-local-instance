@@ -10,13 +10,8 @@ DB_PASSWORD=$(get_secret DB_PASSWORD "Database password" "wordpress")
 DB_HOST=$(get_config DB_HOST "Database host" "mariadb")
 DB_PREFIX=$(get_config DB_PREFIX "Database table prefix" "wp_")
 
-REMOTE_DB_NAME=$(get_config REMOTE_DB_NAME "Remote database name" "null")
-REMOTE_DB_USER=$(get_config REMOTE_DB_USER "Remote database user" "null")
-REMOTE_DB_PASSWORD=$(get_secret REMOTE_DB_PASSWORD "Remote database password" "null")
-REMOTE_DB_HOST=$(get_config REMOTE_DB_HOST "Remote database host" "null")
-
-SERVER_DOCUMENT_ROOT=$(get_config SERVER_DOCUMENT_ROOT "Wordpress files location (leave empty if root)" "")
-if [ -z "$SERVER_DOCUMENT_ROOT" ]; then SERVER_DOCUMENT_ROOT=""; else SERVER_DOCUMENT_ROOT="/"$SERVER_DOCUMENT_ROOT; fi
+if [ -z "$SERVER_DOCUMENT_ROOT" ]; then SERVER_DOCUMENT_ROOT=$(read_input "Server document root (leave empty if root)"); fi
+if [ ! -z "$SERVER_DOCUMENT_ROOT" ]; then SERVER_DOCUMENT_ROOT="/"$SERVER_DOCUMENT_ROOT; fi
 
 echo "### Documentation available at https://wodby.com/docs/stacks/wordpress/local
 ### Changelog can be found at https://github.com/wodby/docker4wordpress/releases
@@ -37,11 +32,6 @@ DB_PASSWORD=$DB_PASSWORD
 DB_ROOT_PASSWORD=$DB_PASSWORD
 DB_HOST=$DB_HOST
 DB_CHARSET=utf8
-
-REMOTE_DB_NAME=$REMOTE_DB_NAME
-REMOTE_DB_USER=$REMOTE_DB_USER
-REMOTE_DB_PASSWORD=$REMOTE_DB_PASSWORD
-REMOTE_DB_HOST=$REMOTE_DB_HOST
 
 # You can generate these using the https://roots.io/salts.html Roots.io secret-key service
 # Supported by vanilla WP image only, see docker-compose.override.yml
@@ -134,12 +124,5 @@ MEMCACHED_TAG=1-2.13.0
 OPENSMTPD_TAG=6-1.14.0
 RSYSLOG_TAG=latest
 WEBGRIND_TAG=1-1.28.5
-XHPROF_TAG=3.6.3" > docker/.env
-
-cd docker
-make wp-first-start
-make mysql-dump-remote
-make down
-make
-
-cd ..
+XHPROF_TAG=3.6.3
+" > docker/.env

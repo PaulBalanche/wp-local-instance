@@ -1,7 +1,7 @@
 {
     "name": "wpextend/wp-local-instance",
     "description": "",
-    "version": "0.0.72",
+    "version": "0.0.73",
     "type": "project",
     "license": "proprietary",
     "authors": [
@@ -17,7 +17,9 @@
     },
     "scripts": {
         "post-create-project-cmd": [
-            "bash init.sh"
+            "rm composer.json",
+            "rm README.md",
+            "bash wpe.sh init"
         ]
     }
 }
