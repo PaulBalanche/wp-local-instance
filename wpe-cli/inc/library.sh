@@ -59,3 +59,32 @@ Commands:
 "
   exit 1
 }
+
+wpe_cli_select() {
+    echo -e "\n\033[1m🍻 Hey! What do you want to do?\033[0m\n"
+
+    select choose in "Download remote database" "Download remote files" "Init docker in existing project" "Init new Bedrock instance (from scratch)"
+    do
+            case $choose in
+
+                "Download remote database" )
+                    source $COMMANDS_PATH/db/download.sh
+                    ;;
+
+                "Download remote files" )
+                    source $COMMANDS_PATH/files/download.sh
+                    ;;
+
+                "Init docker in existing project" )
+                    source $COMMANDS_PATH/init/existing/init.sh
+                    ;;
+
+                "Init new Bedrock instance (from scratch)" )
+                    source $COMMANDS_PATH/init/new/init.sh
+                    ;;
+            esac
+    done
+
+
+    
+}

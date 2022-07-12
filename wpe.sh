@@ -16,5 +16,5 @@ then
 		source $COMMANDS_PATH/$1/index.sh
 	fi
 else
-	wpe_cli_help
+	wpe_cli_select
 fi
