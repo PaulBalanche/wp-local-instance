@@ -1,15 +1,15 @@
 #!/bin/bash
 REMOTE_SSH_HOST=$(get_config REMOTE_SSH_HOST "SSH hostname")
 REMOTE_SSH_USER=$(get_config REMOTE_SSH_USER "SSH username")
-REMOTE_DIR_LOCATION=$(read_input "Remote directory to download")
-LOCAL_DIR_LOCATION=$(read_input "Local directory to paste files (leave empty if root)")
+SOURCE_PATH=$(read_input "Source path (remote)")
+TARGET_PATH=$(read_input "Target path (local)")
 
-if [ ! -z "$LOCAL_DIR_LOCATION" ]
+if [ ! -z "$TARGET_PATH" ]
 then
-    LOCAL_DIR_LOCATION="/"$LOCAL_DIR_LOCATION
+    TARGET_PATH="/"$TARGET_PATH
 fi
 
-if [[ ! -z "$REMOTE_SSH_USER" && ! -z "$REMOTE_SSH_HOST" && ! -z "$REMOTE_DIR_LOCATION" ]]
+if [[ ! -z "$REMOTE_SSH_USER" && ! -z "$REMOTE_SSH_HOST" && ! -z "$SOURCE_PATH" ]]
 then
-    scp -r -p $REMOTE_SSH_USER@$REMOTE_SSH_HOST:$REMOTE_DIR_LOCATION/* .$LOCAL_DIR_LOCATION
+    rsync -avz $REMOTE_SSH_USER@$REMOTE_SSH_HOST:$SOURCE_PATH/ .$TARGET_PATH
 fi

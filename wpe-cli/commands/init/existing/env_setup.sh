@@ -4,7 +4,7 @@
 read -p "Do you want to download a remote database? (y/n) " yn
 case $yn in
     [yY] )
-        source $COMMANDS_PATH/db/import.sh
+        source $COMMANDS_PATH/db/download.sh
         ;;
     [nN] )
         read -p "Do you have a database SQL dump file in the project? (y/n) " yn
@@ -17,30 +17,41 @@ case $yn in
         exit 1;;
 esac
 
-
-
-# Project files
-read -p "Do you want to download files project through SSH? (y/n) " yn
+# Repository
+read -p "Do you want to pull project from a GIT repository? (y/n) " yn
 case $yn in
     [yY] )
-        REMOTE_SSH_HOST=$(get_config REMOTE_SSH_HOST "SSH hostname")
-        REMOTE_SSH_USER=$(get_config REMOTE_SSH_USER "SSH username")
-        REMOTE_PROJET_DIR=$(read_input "Remote project dir")
-
-        echo "
-        REMOTE_SSH_HOST=$REMOTE_DB_NAME
-        REMOTE_SSH_USER=$REMOTE_SSH_USER" >> docker/.env
-
-        scp -r -p ${REMOTE_SSH_USER}@${REMOTE_SSH_HOST}:${REMOTE_PROJET_DIR}/* .
+        GIT_REPOSITORY_URL=$(read_input "Git repository URL")
+        if [ ! -z "$GIT_REPOSITORY_URL" ]
+        then
+            git clone $GIT_REPOSITORY_URL repo-$PROJECT_NAME
+            mv repo-$PROJECT_NAME/* .
+            mv repo-$PROJECT_NAME/.gitignore .gitignore
+            rm -r repo-$PROJECT_NAME
+        fi
         ;;
 esac
 
-cd docker
-
-if [ ! -z ${REMOTE_DB_HOST+x} ]
+if [ -z "$GIT_REPOSITORY_URL" ]
 then
-    source $COMMANDS_PATH/db/download.sh
+    # Project files
+    read -p "Do you want to download files project through SSH? (y/n) " yn
+    case $yn in
+        [yY] )
+            source $COMMANDS_PATH/files/download.sh
+            ;;
+    esac
 fi
 
-make
-cd ..
+# Composer
+if [ -f composer.json ]
+then
+    read -p "We found composer.json file. Do you want to install depedencies ? (y/n) " yn
+    case $yn in
+        [yY] )
+            cd docker
+            make composer-install
+            cd ..
+            ;;
+    esac
+fi

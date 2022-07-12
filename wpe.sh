@@ -7,9 +7,9 @@ source $CONFIG_FILE
 
 COMMANDS_PATH="wpe-cli/commands"
 
-if [[ -f $COMMANDS_PATH/$1/index.sh ]]
+if [ -f $COMMANDS_PATH/$1/index.sh ]
 then
-	if [[ -f $COMMANDS_PATH/$1/$2.sh ]]
+	if [ -f $COMMANDS_PATH/$1/$2.sh ]
 	then
 		source $COMMANDS_PATH/$1/$2.sh
 	else
