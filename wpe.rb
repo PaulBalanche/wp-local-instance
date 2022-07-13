@@ -2,7 +2,7 @@ class WpLocalInstance < Formula
     desc ""
     homepage ""
     url "https://github.com/PaulBalanche/wp-local-instance/archive/refs/heads/master.zip"
-    version "0.0.8"
+    version "0.0.9"
     sha256 ""
     license ""
   
