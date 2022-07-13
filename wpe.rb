@@ -1,4 +1,4 @@
-class WpLocalInstance < Formula
+class wpe < Formula
     desc ""
     homepage ""
     url "https://github.com/PaulBalanche/wp-local-instance/archive/refs/tags/0.0.9.tar.gz"
